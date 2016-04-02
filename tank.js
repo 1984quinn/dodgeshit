@@ -1,19 +1,36 @@
-var nails = [], difficulty = 6, num_of_tanks = 2, tanks = [];
+var nails = [], difficulty = 6, num_of_tanks = localStorage.num_of_tanks, tanks = [], keys = 'afjp', champion = null;
+num_of_tanks = num_of_tanks || 2;
 for(var i = 0; i < num_of_tanks; i ++){
   var tank = {
     y: 0,
     speed: 0,
-    ele: document.createElement('img')
+    ele: document.createElement('img'),
+    title: document.createElement('span'),
+    key: keys[i].toUpperCase(),
+    keyCharCode: keys.charCodeAt(i)
   };
   document.querySelector('#canvas').appendChild(tank.ele);
   tank.ele.src = "tank.png";
   tank.ele.style.width = "100px";
-  tank.ele.style.left = `${1000 - 120 * i - 100}px`;
-  tank.ele.style.bottom = 0;
+  tank.x = 1000 - 120 * (num_of_tanks - i)
+  tank.ele.style.left = `${tank.x}px`;
   tank.ele.style.position = "absolute";
+
+
+  document.querySelector('#canvas').appendChild(tank.title);
+  tank.title.style.width = "100px";
+  tank.title.style.left = `${tank.x}px`;
+  tank.title.style.bottom = `10px`;
+  tank.title.style.position = "absolute";
+  tank.title.style.textAlign = "center";
+  tank.title.innerText = `${tank.key}`;
+
   tanks.push(tank);
 }
-var jump = function(){
+var jump = function(tank){
+  if(tank.y == 0 && !tank.dead){
+    tank.speed += 20;
+  }
 }
 var gravity = function(){
   // adding nail
@@ -24,9 +41,10 @@ var gravity = function(){
     };
     nail.ele.src = "nail.png";
     nail.ele.style.width = "20px";
-    nail.ele.style.bottom = 0;
+    nail.ele.style.bottom = "50px";
     nail.ele.style.position = "absolute";
     document.querySelector('#canvas').appendChild(nail.ele);
+
     nails.push(nail);
   }
   nails = nails.filter(function(nail){
@@ -38,13 +56,36 @@ var gravity = function(){
 
 
   // logic of tanks
-  tanks.forEach(function(tank){
-    tank.y += tank.speed;
-    tank.y = tank.y < 0 ? 0 : tank.y; 
-    if(tank.y){
-      tank.speed -= 0.5;
-    } else{
-      tank.speed = 0;
+  tanks.forEach(function(tank, tank_i){
+    // gravity
+    if(tank !== champion){
+      tank.y += tank.speed;
+      tank.y = tank.y < 0 ? 0 : tank.y; 
+      if(tank.y){
+        tank.speed -= 0.5;
+      } else{
+        tank.speed = 0;
+      }
+    }
+    // death of tank
+    if(tank.y < 50){
+      nails.forEach(function(nail){
+        if(nail.x > tank.x && nail.x < tank.x + 100){
+          tank.dead = true;
+          tank.ele.style.transform = "rotate(180deg)";
+
+          // check champion tank
+          var alive_tanks = tanks.filter(function(the_tank){
+            return !the_tank.dead;
+          });
+          if(alive_tanks.length == 1){
+            champion = alive_tanks[0];
+            champion.y = 200;
+            champion.speed = 0;
+            champion.title.innerText = `${champion.key} is the champion`;
+          }
+        }
+      });
     }
   });
   // logic of nails
@@ -59,7 +100,7 @@ var gravity = function(){
 
   // render
   tanks.forEach(function(tank){
-    tank.ele.style.bottom = `${tank.y}px`;
+    tank.ele.style.bottom = `${tank.y + 30}px`;
   });
   nails.forEach(function(nail){
     nail.ele.style.left = `${nail.x}px`;
@@ -68,10 +109,9 @@ var gravity = function(){
 }
 gravity();
 document.onkeypress = function(ev){
-  if(ev.charCode >= 49 && ev.charCode < 49 + num_of_tanks){
-    var tank = tanks[ev.charCode - 49];
-    if(tank.y == 0){
-      tank.speed += 20;
+  tanks.forEach(function(tank){
+    if(ev.charCode == tank.keyCharCode){
+      jump(tank);
     }
-  }
+  });
 };
