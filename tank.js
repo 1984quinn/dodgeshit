@@ -1,11 +1,12 @@
-var nails = [], difficulty = 6, num_of_tanks = prompt('how many players?', '5'), tanks = [], keys = 'adgjl', champion = null, bg_x = 0;
+var nails = [], difficulty = 6, num_of_tanks = prompt('how many players? (1 ~ 5)', localStorage.num_of_tanks || 5), tanks = [], keys = 'adgjl', champion = null, bg_x = 0;
 num_of_tanks = Number(num_of_tanks);
-if(isNaN(num_of_tanks) || num_of_tanks < 2){
-  num_of_tanks = 2;
+if(isNaN(num_of_tanks) || num_of_tanks < 1){
+  num_of_tanks = 1;
 }
 if(num_of_tanks > 5){
   num_of_tanks = 5;
 }
+localStorage.num_of_tanks = num_of_tanks;
 for(var i = 0; i < num_of_tanks; i ++){
   var tank = {
     y: 0,
