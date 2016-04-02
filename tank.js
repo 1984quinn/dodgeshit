@@ -117,7 +117,6 @@ var gravity = function(){
   });
   window.requestAnimationFrame(gravity);
 }
-gravity();
 document.onkeypress = function(ev){
   tanks.forEach(function(tank){
     if(ev.charCode == tank.keyCharCode){
@@ -125,3 +124,4 @@ document.onkeypress = function(ev){
     }
   });
 };
+document.body.onload = gravity;
