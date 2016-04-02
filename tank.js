@@ -1,4 +1,10 @@
-var nails = [], difficulty = 6, num_of_tanks = prompt('how many players? (1 ~ 5)', localStorage.num_of_tanks || 5), tanks = [], keys = 'adgjl', champion = null, bg_x = 0;
+var nails = [], difficulty = 6, num_of_tanks = null, tanks = [], keys = 'adgjl', champion = null, bg_x = 0;
+if(navigator.userAgent.match(/android|mobile/i)){
+  localStorage.num_of_tanks = localStorage.num_of_tanks || 1;
+}else{
+  localStorage.num_of_tanks = localStorage.num_of_tanks || 5;
+}
+prompt('how many players? (1 ~ 5)', localStorage.num_of_tanks);
 num_of_tanks = Number(num_of_tanks);
 if(isNaN(num_of_tanks) || num_of_tanks < 1){
   num_of_tanks = 1;
@@ -129,3 +135,12 @@ document.onkeypress = function(ev){
     }
   });
 };
+document.ontouchstart = function(){
+  console.log('qdd')
+}
+tanks.forEach(function(tank){
+  tank.ele.ontouchstart = function(ev){
+    console.log('d')
+    jump(tank);
+  };
+});
