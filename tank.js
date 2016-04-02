@@ -30,6 +30,9 @@ for(var i = 0; i < num_of_tanks; i ++){
   tank.title.style.bottom = `10px`;
   tank.title.style.position = "absolute";
   tank.title.style.textAlign = "center";
+  tank.title.style.fontSize = "32px";
+  tank.title.style.color = "yellow";
+  tank.title.style.textShadow = "0 0 5px black";
   tank.title.innerText = `${tank.key}`;
 
   tanks.push(tank);
