@@ -1,5 +1,11 @@
-var nails = [], difficulty = 6, num_of_tanks = localStorage.num_of_tanks, tanks = [], keys = 'afjp', champion = null;
-num_of_tanks = num_of_tanks || 2;
+var nails = [], difficulty = 6, num_of_tanks = prompt('how many players?', '5'), tanks = [], keys = 'adgjl', champion = null, bg_x = 0;
+num_of_tanks = Number(num_of_tanks);
+if(isNaN(num_of_tanks) || num_of_tanks < 2){
+  num_of_tanks = 2;
+}
+if(num_of_tanks > 5){
+  num_of_tanks = 5;
+}
 for(var i = 0; i < num_of_tanks; i ++){
   var tank = {
     y: 0,
@@ -10,7 +16,7 @@ for(var i = 0; i < num_of_tanks; i ++){
     keyCharCode: keys.charCodeAt(i)
   };
   document.querySelector('#canvas').appendChild(tank.ele);
-  tank.ele.src = "tank.png";
+  tank.ele.src = `tank${i}.png`;
   tank.ele.style.width = "100px";
   tank.x = 1000 - 120 * (num_of_tanks - i)
   tank.ele.style.left = `${tank.x}px`;
@@ -33,6 +39,9 @@ var jump = function(tank){
   }
 }
 var gravity = function(){
+  if(champion){
+    return;
+  }
   // adding nail
   if(Math.random() < 0.01){
     var nail = {
@@ -40,7 +49,7 @@ var gravity = function(){
       ele: document.createElement('img')
     };
     nail.ele.src = "nail.png";
-    nail.ele.style.width = "20px";
+    nail.ele.style.width = "50px";
     nail.ele.style.bottom = "50px";
     nail.ele.style.position = "absolute";
     document.querySelector('#canvas').appendChild(nail.ele);
@@ -58,19 +67,17 @@ var gravity = function(){
   // logic of tanks
   tanks.forEach(function(tank, tank_i){
     // gravity
-    if(tank !== champion){
-      tank.y += tank.speed;
-      tank.y = tank.y < 0 ? 0 : tank.y; 
-      if(tank.y){
-        tank.speed -= 0.5;
-      } else{
-        tank.speed = 0;
-      }
+    tank.y += tank.speed;
+    tank.y = tank.y < 0 ? 0 : tank.y; 
+    if(tank.y){
+      tank.speed -= 0.5;
+    } else{
+      tank.speed = 0;
     }
     // death of tank
     if(tank.y < 50){
       nails.forEach(function(nail){
-        if(nail.x > tank.x && nail.x < tank.x + 100){
+        if(nail.x + 25 > tank.x + 45 && nail.x + 25 < tank.x + 55){
           tank.dead = true;
           tank.ele.style.transform = "rotate(180deg)";
 
@@ -95,12 +102,15 @@ var gravity = function(){
 
 
   // logic of game
+  bg_x += difficulty;
+  bg_x %= 1000;
   difficulty += 0.001;
 
 
   // render
+  document.querySelector('#canvas').style.backgroundPosition = `${Math.floor(bg_x)}px 0px`;
   tanks.forEach(function(tank){
-    tank.ele.style.bottom = `${tank.y + 30}px`;
+    tank.ele.style.bottom = `${tank.y + 50}px`;
   });
   nails.forEach(function(nail){
     nail.ele.style.left = `${nail.x}px`;
