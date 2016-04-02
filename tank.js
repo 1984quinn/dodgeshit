@@ -4,7 +4,7 @@ if(navigator.userAgent.match(/android|mobile/i)){
 }else{
   localStorage.num_of_tanks = localStorage.num_of_tanks || 5;
 }
-prompt('how many players? (1 ~ 5)', localStorage.num_of_tanks);
+num_of_tanks = prompt('how many players? (1 ~ 5)', localStorage.num_of_tanks);
 num_of_tanks = Number(num_of_tanks);
 if(isNaN(num_of_tanks) || num_of_tanks < 1){
   num_of_tanks = 1;
