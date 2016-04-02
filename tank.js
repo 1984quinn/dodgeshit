@@ -127,7 +127,6 @@ var gravity = function(){
   });
   window.requestAnimationFrame(gravity);
 }
-gravity();
 document.onkeypress = function(ev){
   tanks.forEach(function(tank){
     if(ev.charCode == tank.keyCharCode){
@@ -135,12 +134,12 @@ document.onkeypress = function(ev){
     }
   });
 };
-document.ontouchstart = function(){
-  console.log('qdd')
-}
 tanks.forEach(function(tank){
   tank.ele.ontouchstart = function(ev){
-    console.log('d')
     jump(tank);
   };
 });
+window.onload = function (){
+
+  gravity();
+};
